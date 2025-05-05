@@ -1,4 +1,3 @@
-import 'jsr:@std/dotenv@^0.225.3/load'
 import { OpenAPIHono, createRoute, z } from 'npm:@hono/zod-openapi@^0.19.6'
 import { cors } from 'npm:hono@^4.7.8/cors'
 import { SECRET } from './secret.ts'
