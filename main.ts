@@ -1,10 +1,23 @@
+import log, { LogLevelDesc } from 'npm:loglevel@^1.9.2'
+
+log.setDefaultLevel((Deno.env.get('LOG_LEVEL') as LogLevelDesc) || 'INFO')
+
 import { OpenAPIHono, createRoute, z } from 'npm:@hono/zod-openapi@^0.19.6'
 import { cors } from 'npm:hono@^4.7.8/cors'
+import { bearerAuth } from 'npm:hono@^4.7.8/bearer-auth'
+import { logger } from 'npm:hono@^4.7.8/logger'
+import { cache } from 'npm:hono@^4.7.8/cache'
 import { SECRET } from './secret.ts'
 import { swaggerUI } from 'npm:@hono/swagger-ui@^0.5.1'
 import { createStorage } from './storage.ts'
 
 const app = new OpenAPIHono()
+
+app.use(
+  logger((msg, ...rest) => {
+    log.info(msg, ...rest)
+  })
+)
 
 const storage = createStorage()
 
@@ -62,6 +75,7 @@ app.openapi(
   createRoute({
     method: 'post',
     path: '/mod/{id}/{version}',
+    middleware: [bearerAuth({ token: SECRET! })],
     security: [
       {
         Bearer: [],
@@ -87,18 +101,14 @@ app.openapi(
       200: {
         description: 'Upload succeed.',
       },
-      403: {
-        description: 'Auth failed.',
+      401: {
+        description: 'Unauthorized.',
       },
     },
   }),
   async c => {
-    const auth = c.req.header()['authorization'].replace(/^Bearer\s*/, '')
     const { id, version } = c.req.valid('param')
     const body = await (await c.req.blob()).bytes()
-    if (auth != SECRET) {
-      return c.body(null, 403)
-    }
     await storage.mod.put(id, version, body)
     return c.body(null)
   }

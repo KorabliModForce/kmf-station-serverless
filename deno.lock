@@ -12,6 +12,7 @@
     "npm:hono@^4.7.8": "4.7.8",
     "npm:jose@^6.0.1": "6.0.10",
     "npm:jose@^6.0.10": "6.0.10",
+    "npm:loglevel@^1.9.2": "1.9.2",
     "npm:semver@^7.7.1": "7.7.1"
   },
   "jsr": {
@@ -1123,6 +1124,9 @@
     },
     "jose@6.0.10": {
       "integrity": "sha512-skIAxZqcMkOrSwjJvplIPYrlXGpxTPnro2/QWTDCxAdWQrSTV5/KqspMWmi5WAx5+ULswASJiZ0a+1B/Lxt9cw=="
+    },
+    "loglevel@1.9.2": {
+      "integrity": "sha512-HgMmCqIJSAKqo68l0rS2AanEWfkxaZ5wNiEFb5ggm08lDs9Xl2KxBlX3PTcaD2chBM1gXAYf491/M2Rv8Jwayg=="
     },
     "merge-stream@2.0.0": {
       "integrity": "sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w=="
