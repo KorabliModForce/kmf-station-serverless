@@ -40,7 +40,7 @@ if (!S3_PUBLIC_URL_BASE) {
   throw new Error('S3_PUBLIC_URL_BASE must be specified')
 }
 
-const MAYBE_VERSION_REGEX = /^(([0-9]+)[.-])*([0-9]+)([.-].*[^.-])?$/
+export const MAYBE_VERSION_REGEX = /^(([0-9]+)[.-])*([0-9]+)([.-].*[^.-])?$/
 const VERSION_NUMBER_SPLIT_REGEX = /[.-]/
 const ALPHA_PREFIX_OR_SUFFIX_REGEX = /(^[^0-9]+)|([^0-9]+$)/
 

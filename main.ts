@@ -9,6 +9,7 @@ import { logger } from 'npm:hono@^4.7.8/logger'
 import { SECRET } from './secret.ts'
 import { swaggerUI } from 'npm:@hono/swagger-ui@^0.5.1'
 import { createStorage } from './storage.ts'
+import { MAYBE_VERSION_REGEX } from './storage/s3.ts'
 
 const app = new OpenAPIHono()
 
@@ -103,13 +104,20 @@ app.openapi(
       401: {
         description: 'Unauthorized.',
       },
+      400: {
+        description: 'Bad request',
+      },
     },
   }),
   async c => {
     const { id, version } = c.req.valid('param')
-    const body = await (await c.req.blob()).bytes()
-    await storage.mod.put(id, version, body)
-    return c.body(null)
+    if (MAYBE_VERSION_REGEX.test(version)) {
+      const body = await (await c.req.blob()).bytes()
+      await storage.mod.put(id, version, body)
+      return c.body(null)
+    } else {
+      return c.body(null, 400)
+    }
   }
 )
 
