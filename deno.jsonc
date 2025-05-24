@@ -2,7 +2,7 @@
   "nodeModulesDir": "auto",
   "tasks": {
     "start": "deno run --env-file --allow-net --allow-env --allow-read --allow-sys main.ts",
-    "deploy": "deno run -A jsr:@deno/deployctl@^1.13.1 deploy"
+    "deploy": "deno run -A jsr:@deno/deployctl@^1.13.1 deploy --env-file=.env.prod"
   },
   "compilerOptions": {
     "lib": [
