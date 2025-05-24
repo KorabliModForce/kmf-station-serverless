@@ -5,39 +5,17 @@ import {
   ObjectCannedACL,
   PutObjectCommand,
   S3Client,
-} from 'npm:@aws-sdk/client-s3@^3.802.0'
-import { StreamingBlobPayloadInputTypes } from 'npm:@smithy/types@^4.2.0'
-// @ts-types="npm:@types/semver@^7.7.0"
+} from '@aws-sdk/client-s3'
+import { StreamingBlobPayloadInputTypes } from '@smithy/types'
+// @ts-types="@types/semver"
+import { gt as semverGt, eq as semverEq, valid as semverValid } from 'semver'
 import {
-  gt as semverGt,
-  eq as semverEq,
-  valid as semverValid,
-} from 'npm:semver@^7.7.1'
-
-const S3_ENDPOINT = Deno.env.get('S3_ENDPOINT')
-if (!S3_ENDPOINT) {
-  throw new Error('S3_ENDPOINT must be specified')
-}
-
-const S3_ACCESS_KEY_ID = Deno.env.get('S3_ACCESS_KEY_ID')
-if (!S3_ACCESS_KEY_ID) {
-  throw new Error('S3_ACCESS_KEY_ID must be specified')
-}
-
-const S3_SECRET_ACCESS_KEY = Deno.env.get('S3_SECRET_ACCESS_KEY')
-if (!S3_SECRET_ACCESS_KEY) {
-  throw new Error('S3_SECRET_ACCESS_KEY must be specified')
-}
-
-const S3_BUCKET = Deno.env.get('S3_BUCKET')
-if (!S3_BUCKET) {
-  throw new Error('S3_BUCKET must be specified')
-}
-
-const S3_PUBLIC_URL_BASE = Deno.env.get('S3_PUBLIC_URL_BASE')
-if (!S3_PUBLIC_URL_BASE) {
-  throw new Error('S3_PUBLIC_URL_BASE must be specified')
-}
+  S3_ACCESS_KEY_ID,
+  S3_BUCKET,
+  S3_ENDPOINT,
+  S3_PUBLIC_URL_BASE,
+  S3_SECRET_ACCESS_KEY,
+} from '../env.ts'
 
 export const MAYBE_VERSION_REGEX = /^(([0-9]+)[.-])*([0-9]+)([.-].*[^.-])?$/
 const VERSION_NUMBER_SPLIT_REGEX = /[.-]/

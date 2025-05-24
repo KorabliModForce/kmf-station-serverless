@@ -1,7 +1,8 @@
 {
   "nodeModulesDir": "auto",
   "tasks": {
-    "start": "deno run --env-file --allow-net --allow-env --allow-read --allow-sys main.ts"
+    "start": "deno run --env-file --allow-net --allow-env --allow-read --allow-sys main.ts",
+    "deploy": "deno run -A jsr:@deno/deployctl@^1.13.1 deploy"
   },
   "compilerOptions": {
     "lib": [
@@ -9,5 +10,14 @@
       "deno.ns",
       "deno.unstable"
     ]
+  },
+  "imports": {
+    "@aws-sdk/client-s3": "npm:@aws-sdk/client-s3@^3.817.0",
+    "@hono/swagger-ui": "npm:@hono/swagger-ui@^0.5.1",
+    "@hono/zod-openapi": "npm:@hono/zod-openapi@^0.19.6",
+    "@smithy/types": "npm:@smithy/types@^4.3.0",
+    "@types/semver": "npm:@types/semver@^7.7.0",
+    "hono": "npm:hono@^4.7.10",
+    "semver": "npm:semver@^7.7.2"
   }
 }
