@@ -1,23 +1,12 @@
-import log, { LogLevelDesc } from 'npm:loglevel@^1.9.2'
-
-log.setDefaultLevel((Deno.env.get('LOG_LEVEL') as LogLevelDesc) || 'INFO')
-
 import { OpenAPIHono, createRoute, z } from 'npm:@hono/zod-openapi@^0.19.6'
 import { cors } from 'npm:hono@^4.7.8/cors'
 import { bearerAuth } from 'npm:hono@^4.7.8/bearer-auth'
-import { logger } from 'npm:hono@^4.7.8/logger'
 import { SECRET } from './secret.ts'
 import { swaggerUI } from 'npm:@hono/swagger-ui@^0.5.1'
 import { createStorage } from './storage.ts'
 import { MAYBE_VERSION_REGEX } from './storage/s3.ts'
 
 const app = new OpenAPIHono()
-
-app.use(
-  logger((msg, ...rest) => {
-    log.info(msg, ...rest)
-  })
-)
 
 const storage = createStorage()
 

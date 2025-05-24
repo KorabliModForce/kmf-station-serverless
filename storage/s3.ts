@@ -13,7 +13,6 @@ import {
   eq as semverEq,
   valid as semverValid,
 } from 'npm:semver@^7.7.1'
-import log from 'npm:loglevel@^1.9.2'
 
 const S3_ENDPOINT = Deno.env.get('S3_ENDPOINT')
 if (!S3_ENDPOINT) {
@@ -89,11 +88,11 @@ export const createS3StorageProvider = (): StorageProvider => {
       if (result.Contents) {
         cachedFileList.splice(0, cachedFileList.length)
         cachedFileList.push(...result.Contents)
-        log.debug(cachedFileList)
+        console.debug(cachedFileList)
         return cachedFileList.filter(x => x.Key?.startsWith(prefix))
       } else {
         cachedFileList.splice(0, cachedFileList.length)
-        log.debug(cachedFileList)
+        console.debug(cachedFileList)
         return []
       }
     }
@@ -126,11 +125,21 @@ export const createS3StorageProvider = (): StorageProvider => {
               result[modid].sort((a_, b_) => {
                 // 去除无用前缀
                 const [a, b] = [a_.replace(/^v/, ''), b_.replace(/^v/, '')]
-                log.debug('Is', a, 'a version?', MAYBE_VERSION_REGEX.test(a))
-                log.debug('Is', b, 'a version?', MAYBE_VERSION_REGEX.test(b))
+                console.debug(
+                  'Is',
+                  a,
+                  'a version?',
+                  MAYBE_VERSION_REGEX.test(a)
+                )
+                console.debug(
+                  'Is',
+                  b,
+                  'a version?',
+                  MAYBE_VERSION_REGEX.test(b)
+                )
                 if (semverValid(a) && semverValid(b)) {
                   // 语义化版本号当然是最好的
-                  log.debug('semver', a, b)
+                  console.debug('semver', a, b)
                   if (semverGt(a, b)) {
                     return -1
                   } else if (semverEq(a, b)) {
@@ -151,22 +160,22 @@ export const createS3StorageProvider = (): StorageProvider => {
                     .split(VERSION_NUMBER_SPLIT_REGEX)
                     .map(x => x.replace(ALPHA_PREFIX_OR_SUFFIX_REGEX, ''))
                     .filter(x => x != '')
-                  log.debug(aNums, 'vs', bNums)
+                  console.debug(aNums, 'vs', bNums)
                   for (const i of Array(
                     Math.min(aNums.length, bNums.length)
                   ).keys()) {
                     if (aNums[i] > bNums[i]) {
-                      log.debug(aNums, '>', bNums)
+                      console.debug(aNums, '>', bNums)
                       return -1
                     } else if (aNums[i] < bNums[i]) {
-                      log.debug(aNums, '<', bNums)
+                      console.debug(aNums, '<', bNums)
                       return 1
                     }
                   }
                   return 0
                 } else {
                   // 我们不能辨别这种版本号的差异，所以保持现状好了
-                  log.warn('unrecognized version diff:', a, b)
+                  console.warn('unrecognized version diff:', a, b)
                   return 0
                 }
               })
