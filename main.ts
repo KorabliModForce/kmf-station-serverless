@@ -4,11 +4,23 @@ import { bearerAuth } from 'hono/bearer-auth'
 import { SECRET } from './env.ts'
 import { swaggerUI } from '@hono/swagger-ui'
 import { createStorage } from './storage.ts'
-import { MAYBE_VERSION_REGEX } from './storage/s3.ts'
+import { MAYBE_VERSION_REGEX } from './util.ts'
 
 const app = new OpenAPIHono()
 
 const storage = createStorage()
+
+const commonResponses = {
+  500: {
+    description: 'Internal server error.',
+  },
+  503: {
+    description: 'Service unavailable.',
+  },
+  504: {
+    description: 'Gateway timeout',
+  },
+}
 
 app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
   type: 'http',
@@ -33,6 +45,7 @@ app.openapi(
       }),
     },
     responses: {
+      ...commonResponses,
       302: {
         description: 'Mod download',
         headers: z.object({
@@ -57,6 +70,49 @@ app.openapi(
       return c.notFound()
     }
     return c.redirect(await storage.mod.get(id, version))
+  }
+)
+
+app.openapi(
+  createRoute({
+    method: 'get',
+    path: '/metadata/mod/version/latest/{id}',
+    request: {
+      params: z.object({
+        id: z.string().openapi('Mod ID'),
+      }),
+    },
+    responses: {
+      ...commonResponses,
+      404: {
+        description: 'Mod not found.',
+      },
+      204: {
+        description: 'No content.',
+      },
+      200: {
+        description: 'OK.',
+        content: {
+          'text/plain': {
+            schema: z.string().openapi('Mod latest version.'),
+          },
+        },
+      },
+    },
+  }),
+  async c => {
+    const { id } = c.req.valid('param')
+    const version = (
+      await storage.mod.list({
+        modid: id,
+      })
+    )[id].shift()
+    if (version) {
+      return c.text(version)
+    } else {
+      c.status(204)
+      return c.body(null)
+    }
   }
 )
 
@@ -87,6 +143,7 @@ app.openapi(
       },
     },
     responses: {
+      ...commonResponses,
       200: {
         description: 'Upload succeed.',
       },
@@ -118,7 +175,6 @@ app.doc('/doc', {
   openapi: '3.1.0',
 })
 
-// @ts-ignore
 app.get('/swagger-ui', swaggerUI({ url: '/doc' }))
 
 Deno.serve(app.fetch)

@@ -1,7 +1,9 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@std/assert@^1.0.13": "1.0.13",
     "jsr:@std/dotenv@~0.225.3": "0.225.3",
+    "jsr:@std/internal@^1.0.6": "1.0.6",
     "npm:@aws-sdk/client-s3@^3.802.0": "3.802.0",
     "npm:@aws-sdk/client-s3@^3.817.0": "3.817.0",
     "npm:@dotenvx/dotenvx@^1.43.0": "1.43.0_picomatch@4.0.2",
@@ -20,8 +22,17 @@
     "npm:semver@^7.7.2": "7.7.2"
   },
   "jsr": {
+    "@std/assert@1.0.13": {
+      "integrity": "ae0d31e41919b12c656c742b22522c32fb26ed0cba32975cb0de2a273cb68b29",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
     "@std/dotenv@0.225.3": {
       "integrity": "a95e5b812c27b0854c52acbae215856d9cce9d4bbf774d938c51d212711e8d4a"
+    },
+    "@std/internal@1.0.6": {
+      "integrity": "9533b128f230f73bd209408bb07a4b12f8d4255ab2a4d22a1fd6d87304aca9a4"
     }
   },
   "npm": {
@@ -1911,6 +1922,7 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@std/assert@^1.0.13",
       "npm:@aws-sdk/client-s3@^3.817.0",
       "npm:@hono/swagger-ui@~0.5.1",
       "npm:@hono/zod-openapi@~0.19.6",
